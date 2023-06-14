@@ -72,7 +72,7 @@ const App = () => {
       
         <View style={styles.formContainer}>
           <Text style={styles.title}>Password Generator</Text>
-        </View>
+        {/* </View> */}
 
         <Formik
           initialValues={{ passwordLength: ""}}
@@ -96,8 +96,18 @@ const App = () => {
        }) => (
         <>
           <View style={styles.inputWrapper}>
-            <View style={styles.inputColumn}>
+              
+              <View style={styles.inputColumn}>
               <Text style={styles.heading}>Password Length</Text>
+              {
+                touched.passwordLength && errors.passwordLength && (
+                  <Text style={styles.errorText}>
+                    {errors.passwordLength}
+                  </Text>
+                )
+              }
+              </View>
+              
               <TextInput 
                 style={styles.inputStyle}
                 value={values.passwordLength}
@@ -105,20 +115,68 @@ const App = () => {
                 placeholder='Ex. 8'
                 keyboardType="numeric"
               />
-            </View>
           </View>
-          <View style={styles.inputWrapper}></View>
-          <View style={styles.inputWrapper}></View>
-          <View style={styles.inputWrapper}></View>
-          <View style={styles.inputWrapper}></View>
+
+          <View style={styles.inputWrapper}>
+            <Text style={styles.heading}>Include lowercase</Text>
+            <BouncyCheckbox 
+              disableBuiltInState
+              isChecked={lowerCase}
+              onPress={() => setLowerCase(!lowerCase)}
+              fillColor='#FED85D'
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+          <Text style={styles.heading}>Include Uppercase letters</Text>
+            <BouncyCheckbox 
+              disableBuiltInState
+              isChecked={upperCase}
+              onPress={() => setUpperCase(!upperCase)}
+              fillColor='#FC80A5'
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+          <Text style={styles.heading}>Include Numbers</Text>
+            <BouncyCheckbox 
+              disableBuiltInState
+              isChecked={numbers}
+              onPress={() => setNumbers(!numbers)}
+              fillColor='#29AB87'
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+          <Text style={styles.heading}>Include symbols</Text>
+            <BouncyCheckbox 
+              disableBuiltInState
+              isChecked={symbols}
+              onPress={() => setSymbols(!symbols)}
+              fillColor='#C9A0DC'
+            />
+          </View>
           
           <View style={styles.formActions}>
-            <TouchableOpacity>
-              <Text>Generate Password</Text>
+            
+            <TouchableOpacity
+              disabled={!isValid}
+              style={styles.primaryBtn}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.primaryBtnTxt}>Generate Password</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <Text>Reset</Text>
+
+            <TouchableOpacity
+              style={styles.secondaryBtn}
+              onPress={() => {
+                handleReset()
+                resetPassword()
+              }}
+            >
+              <Text style={styles.primaryBtnTxt}>Reset</Text>
             </TouchableOpacity>
+
           </View>
         </>
         //  <form onSubmit={handleSubmit}>
@@ -143,7 +201,23 @@ const App = () => {
         //    </button>
         //  </form>
        )}
-     </Formik>
+        </Formik>
+        </View>
+
+        {
+          isPasswordGenerated ? (
+            <View style={[styles.card, styles.cardElevated]}>
+              <Text style={styles.subTitle}>Result:</Text>
+              <Text style={styles.description}>Long Press to copy</Text>
+              <Text 
+                selectable={true} 
+                style={styles.generatedPassword}
+              >
+                {password}
+              </Text>
+            </View>
+          ) : null
+        }
       
       </SafeAreaView>
     
